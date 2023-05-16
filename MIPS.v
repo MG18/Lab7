@@ -95,7 +95,7 @@ module MIPS(
 
    /////////////////////////////////////
    // Instantiate the Instruction Memory
-	  InstructionMemory i_imem (PC, Instr);
+	  InstructionMemory i_imem (PC[7:2], Instr);
 										
    // Sign extension, replicate the MSB of the Immediate value 
 	assign SignImm = {{16{Instr[15]}},Instr[15:0]};
@@ -121,14 +121,14 @@ module MIPS(
    // ALU: first determine the inputs, and then instantiate the ALU
 	assign SrcB = ALUSrc ? SignImm : WriteData ; // ALU input is either immediate or from register
 
-     ALU i_alu (SrcA, ScrB, ALUControl, ALUResult, Zero);	
+     ALU i_alu (SrcA, ScrB, ALUControl[3:0], ALUResult, Zero);	
 					 
    // Generate the PCSrc signal that tells to take the branch
 	assign PCSrc = Branch & Zero;                // simple AND
    
    ////////////////////////////////////
 	// Instantiate the Data Memory
-	  DataMemory i_dmem (CLK, ALUResult, IsMemWrite, WriteData, ReadData);
+	  DataMemory i_dmem (CLK, ALUResult[7:2], IsMemWrite, WriteData, ReadData);
 
    // Memory Mapped I/O
    assign IsIO = (ALUResult[31:4] == 28'h00007ff) ? 1 : 0; // 1: when datamemory address
