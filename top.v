@@ -22,6 +22,7 @@ module top(
         input             FPGACLK,
         // TODO PART II for Lab 8
         // add input port to read the switch value for speed control of the snake
+        input [1:0] SWITCH,
 		  input             RESET,
 		  output     [6:0]  LED,
 	     output reg [3:0]  AN
@@ -84,7 +85,7 @@ clockdiv ClockDiv (
    // Create the 32 bit IOReadData based on IOAddr value. Remember IOAddr is a 4-bit
    // value.
     
-   // assign IOReadData = ;
+   assign IOReadData = (IOAddr == 4'b0100) ? {30'b0, SWITCH[0], SWITCH[1]} : 32'b0;
 
 
 // Register to save the 28-bit Value

@@ -121,7 +121,7 @@ module MIPS(
    // ALU: first determine the inputs, and then instantiate the ALU
 	assign SrcB = ALUSrc ? SignImm : WriteData ; // ALU input is either immediate or from register
 
-     ALU i_alu (SrcA, ScrB, ALUControl[3:0], ALUResult, Zero);	
+     ALU i_alu (SrcA, SrcB, ALUControl[3:0], ALUResult, Zero);	
 					 
    // Generate the PCSrc signal that tells to take the branch
 	assign PCSrc = Branch & Zero;                // simple AND
@@ -134,10 +134,10 @@ module MIPS(
    assign IsIO = (ALUResult[31:4] == 28'h00007ff) ? 1 : 0; // 1: when datamemory address
 	                                                  // falls into I/O  address range
    // TODO Part 1
-   assign IsMemWrite  = ~IsIO && MemWrite;             // Is 1 when there is a SW instruction on DataMem address
+   assign IsMemWrite  = ~IsIO & MemWrite;             // Is 1 when there is a SW instruction on DataMem address
    assign IOWriteData =  WriteData;              // This line is connected directly to WriteData
    assign IOAddr      =  ALUResult[3:0];              // The LSB 4 bits of the Address is assigned to IOAddr
-   assign IOWriteEn   =  IsIO && MemWrite;              // Is 1 when there is a SW instruction on IO address 
+   assign IOWriteEn   =  IsIO & MemWrite;              // Is 1 when there is a SW instruction on IO address 
    
 
    assign ReadMemIO   = IsIO ? IOReadData : ReadData;   // Mux selects memory or I/O	
